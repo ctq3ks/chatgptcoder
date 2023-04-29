@@ -48,9 +48,9 @@ function FileUploadArea(props: FileUploadAreaProps) {
           Array.from(selectedFiles).map(async (file) => {
             // Check the file type
             if (
-              file.type.match(
-                /(text\/plain|application\/(pdf|msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.document)|text\/(markdown|x-markdown))/
-              ) && // AND file isn't too big
+              // file.type.match(
+              //   /(text\/plain|application\/(pdf|msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.document)|text\/(markdown|x-markdown))/
+              // ) && // AND file isn't too big
               file.size < props.maxFileSizeMB * 1024 * 1024
             ) {
               // Check if the file name already exists in the files state
@@ -61,7 +61,7 @@ function FileUploadArea(props: FileUploadAreaProps) {
               const formData = new FormData();
               formData.append("file", file);
               formData.append("filename", file.name);
-
+              console.log(file);
               try {
                 const processFileResponse = await axios.post(
                   "/api/process-file",
@@ -89,6 +89,7 @@ function FileUploadArea(props: FileUploadAreaProps) {
                     extractedText: text,
                   };
                   console.log(fileObject);
+                  console.log("afdadfsad");
 
                   return fileObject;
                 } else {
