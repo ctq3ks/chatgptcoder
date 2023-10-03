@@ -1,3 +1,5 @@
+# All codebase was pulled from Open AI and an existing web app that takes uploaded files and lets you ask questions about the documents. I want to modify this to take in a github repository and allow you to ask questions and generate code based on your existing codebase.
+
 # File Q&A
 
 File Q&A is a [Next.js](https://nextjs.org/) app that lets you find answers in your files using OpenAI APIs. You can upload files and ask questions related to their content, and the app will use embeddings and GPT to generate answers from the most relevant files.
