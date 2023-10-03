@@ -49,7 +49,8 @@ export default async function handler(
       filepath: file.filepath,
       filetype: file.mimetype ?? "",
     });
-
+    console.log("text from extract text form file");
+    console.log(text);
     const { meanEmbedding, chunks } = await createEmbeddings({
       text,
     });

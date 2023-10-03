@@ -17,22 +17,27 @@ export async function getEmbeddingsForText({
   maxCharLength?: number;
   batchSize?: number;
 }): Promise<TextEmbedding[]> {
+  console.log(text);
   const textChunks = chunkText({ text, maxCharLength });
-
+  console.log('in the textchunking');
+  console.log(textChunks);
   const batches = [];
   for (let i = 0; i < textChunks.length; i += batchSize) {
     batches.push(textChunks.slice(i, i + batchSize));
   }
-
+  console.log('batches');
+  console.log(batches);
   try {
     const batchPromises = batches.map((batch) => embedding({ input: batch }));
-
+    console.log('batchpromises');
     const embeddings = (await Promise.all(batchPromises)).flat();
-
+    console.log('embeddings');
     const textEmbeddings = embeddings.map((embedding, index) => ({
       embedding,
       text: textChunks[index],
     }));
+    console.log('textembeddings');
+    console.log(textEmbeddings);
 
     return textEmbeddings;
   } catch (error: any) {

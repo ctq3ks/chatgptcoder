@@ -12,56 +12,56 @@ export default async function extractTextFromFile({
 }): Promise<string> {
   console.log("filetype"+ filetype);
 
-  // if (filetype === ""){
-  const stream = createReadStream(filepath, 'utf8');
-  let rawString = '';
+    const buffer: Buffer = await new Promise((resolve, reject) => {
+      const fileStream = fs.createReadStream(filepath);
+      const chunks: any[] = [];
+      fileStream.on("data", (chunk) => {
+        chunks.push(chunk);
+      });
+      fileStream.on("error", (error) => {
+        reject(error);
+      });
+      fileStream.on("end", () => {
+        resolve(Buffer.concat(chunks));
+      });
+    });
+    // Handle different file types using different modules
+    switch (filetype) {
+      case "application/pdf":
+        const pdfData = await pdfParse(buffer);
+        return pdfData.text;
+      case "application/vnd.openxmlformats-officedocument.wordprocessingml.document": // i.e. docx file
+        const docxResult = await mammoth.extractRawText({ path: filepath });
+        return docxResult.value;
+      case "text/markdown":
+      case "text/csv":
+      case "text/html":
+        const html = buffer.toString();
+        return NodeHtmlMarkdown.translate(html);
+      case "text/plain":
+        return buffer.toString();
+      case "text/javascript":
+        return buffer.toString();
+      case "application/octet-stream":
+        // const stream = createReadStream(filepath, 'utf8');
+        // let rawString = '';
 
-  stream.on('data', chunk => {
-    rawString += chunk;
-  });
+        // stream.on('data', chunk => {
+        //   rawString += chunk;
+        // });
 
-  stream.on('end', () => {
-    console.log(rawString); // outputs the raw string contents of the .js file
-    return rawString
-  });
-  return rawString
-    // const buffertsx = readFileSync(filepath);
-    // buffertsx.toString();
-    // console.log(buffertsx.toString());
-    // return buffertsx.toString()
-  // } else{
-  //   const buffer: Buffer = await new Promise((resolve, reject) => {
-  //     const fileStream = fs.createReadStream(filepath);
-  //     const chunks: any[] = [];
-  //     fileStream.on("data", (chunk) => {
-  //       chunks.push(chunk);
-  //       console.log(chunk);
-  //     });
-  //     fileStream.on("error", (error) => {
-  //       reject(error);
-  //     });
-  //     fileStream.on("end", () => {
-  //       resolve(Buffer.concat(chunks));
-  //     });
-  //   });
-  //   // Handle different file types using different modules
-  //   switch (filetype) {
-  //     case "application/pdf":
-  //       const pdfData = await pdfParse(buffer);
-  //       return pdfData.text;
-  //     case "application/vnd.openxmlformats-officedocument.wordprocessingml.document": // i.e. docx file
-  //       const docxResult = await mammoth.extractRawText({ path: filepath });
-  //       return docxResult.value;
-  //     case "text/markdown":
-  //     case "text/csv":
-  //     case "text/html":
-  //       const html = buffer.toString();
-  //       return NodeHtmlMarkdown.translate(html);
-  //     case "text/plain":
-  //       return buffer.toString();
-  //     default:
-  //       throw new Error("Unsupported file type");
-  //   }
-  // }
-  
+        // stream.on('end', () => {
+        //   const cleanstring = rawString.replace(/\s+/g, '');
+        //   console.log(cleanstring);
+        //   return cleanstring
+        // });
+        // console.log("rawString");
+        // console.log(rawString);
+        return buffer.toString();
+      case "application/json":
+        return buffer.toString()
+      default:
+        throw new Error("Unsupported file type");
+    }
 }
+

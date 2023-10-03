@@ -14,13 +14,18 @@ export async function createEmbeddings({
   maxCharLength?: number;
 }): Promise<Embeddings> {
   try {
+    console.log("getting embeddings");
+    console.log("text to embeddings");
+    console.log(text);
     const textEmbeddings = await getEmbeddingsForText({
       text,
       maxCharLength,
     });
-
+    console.log("got text embeddings");
     // If there are 0 or 1 embeddings, the mean embedding is the same as the embedding
     if (textEmbeddings.length <= 1) {
+      console.log("too short embeddings");
+
       return {
         meanEmbedding: textEmbeddings[0]?.embedding ?? [],
         chunks: textEmbeddings,
