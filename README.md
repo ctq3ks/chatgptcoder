@@ -1,4 +1,4 @@
-All codebase was pulled from Open AI and an existing web app that takes uploaded files and lets you ask questions about the documents. I want to modify this to take in a github repository and allow you to ask questions and generate code based on your existing codebase.
+This codebase was pulled from Open AI and an existing web app that takes uploaded files and lets you ask questions about their contents. I wanted to modify this to take in a github repository, allowing you to ask questions and generate code based on your existing codebase.
 
 # File Q&A
 
